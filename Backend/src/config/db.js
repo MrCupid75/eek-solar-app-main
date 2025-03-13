@@ -3,34 +3,43 @@ const { MongoClient, ServerApiVersion } = require('mongodb')
 
 const uri = process.env.MONGO_URI;
 const dbName = process.env.MONGO_DB_NAME;
-console.log(dbName)
 
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true
-    }
-})
+let db = null;
+let client = null;
 
 async function connectDB() {
     try {
+
+        if (db) {
+            return db;
+        }
+
+        client = new MongoClient(uri, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true
+            }
+        })
+
         await client.connect()
-        console.log("DB connected")
 
-        const db = client.db(dbName)
-
-        const collection = db.collection("users")
-
-        const documents = await collection.find({}).toArray()
-
-        console.log(documents)
+        db = client.db(dbName)
+        return db;
 
     } catch (error) {
         console.log(error)
-    } finally {
-        await client.close()
     }
 }
 
-connectDB()
+async function closeDB() {
+    if (client) {
+        await client.close();
+        console.log("Database closed")
+
+        client = null;
+        db = null;
+    }
+}
+
+module.exports = { connectDB, closeDB }
