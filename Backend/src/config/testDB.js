@@ -1,5 +1,5 @@
 const { connectDB, closeDB } = require('./db.js')
-require('dotenv').config({ path: '../../.env' })
+require('dotenv').config()
 
 async function testConnection() {
     try {
