@@ -15,14 +15,15 @@ async function connectDB() {
         }
 
         client = new MongoClient(uri, {
-            serverApi: {
-                version: ServerApiVersion.v1,
-                strict: true,
-                deprecationErrors: true
-            }
-        })
+            serverApi: ServerApiVersion.v1,
+            tls: true,
+            tlsAllowInvalidCertificates: true,
+            connectTimeoutMS: 30000,
+        }
+        )
 
         await client.connect()
+        console.log("DB connected")
 
         db = client.db(dbName)
         return db;

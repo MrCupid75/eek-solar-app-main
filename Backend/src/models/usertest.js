@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { registerUser } = require('./User.js')
+const { registerUser, loginUser } = require('./User.js')
 
 
 async function testRegister() {
@@ -11,4 +11,13 @@ async function testRegister() {
     }
 }
 
-testRegister();
+async function testLogin() {
+    try {
+        const result = await loginUser("m@gmail.com", "sfbsdiuf");
+        console.log(result)
+    } catch (error) {
+        console.error("Error in login:", error)
+    }
+}
+
+testLogin()
